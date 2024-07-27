@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://the-hoon-log/blog-metadata.schema.json",
+  "title": "Blog metadata.",
+  "description": "Blog metadata.json",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Will be rendered on the HTML title element."
+    },
+    "tags": {
+      "type": "array",
+      "description": "Can only contain predefined tags and should not duplicate.",
+      "items": {
+        "$ref": "#/definitions/blogTags"
+      }
+    },
+    "sort": {
+      "type":"integer",
+      "description": "The bigger the number, the newer the post is."
+    }
+  },
+  "required": [
+    "title",
+    "tags",
+    "sort"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "blogTags": {
+      "description": "Blog tags",
+      "type": "string",
+      "enum": [
+        "Office365",
+        "Linux",
+        "LinuxMint"
+      ]
+    }
+  }
+}

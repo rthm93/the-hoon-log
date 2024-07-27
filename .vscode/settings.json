@@ -1,0 +1,10 @@
+{
+  "json.schemas": [
+    {
+      "fileMatch": [
+        "/blogs/**/metadata.json"
+      ],
+      "url": "./blogs/blog-metadata.schema.json"
+    }
+  ]
+}
