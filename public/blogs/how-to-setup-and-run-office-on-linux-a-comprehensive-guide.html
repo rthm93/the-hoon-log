@@ -1,0 +1,127 @@
+<p>Transitioning from Windows to Linux can be both exciting and challenging. While Linux Mint 21.3 offers a smooth and enjoyable experience, the absence of an official Microsoft Office version for Linux can be a significant hurdle for many users. Fortunately, there’s a way to bring Microsoft Office apps like Excel, PowerPoint, and Word to your Linux desktop. In this guide, I’ll walk you through setting up Microsoft Office on Linux Mint 21.3 using WinApps and Docker.</p>
+<h2>Why No Official Microsoft Office for Linux?</h2>
+<p>It&#39;s understandable to feel frustrated by the lack of a native Microsoft Office version for Linux. However, Microsoft’s decision to focus on Windows and macOS makes sense from a business perspective. If transitioning to Linux were as easy as switching between software, more users might leave Windows for Linux. Thankfully, there are alternative methods to access Office apps on Linux.</p>
+<h2>Using WinApps to Run Microsoft Office on Linux</h2>
+<p>While native support is missing, you can still use Microsoft Office on Linux by running it in a Windows environment using <a href="https://github.com/winapps-org/winapps">WinApps</a> (<a href="https://github.com/winapps-org/winapps">https://github.com/winapps-org/winapps</a>). WinApps renders Windows applications running on a Windows environment on your Linux desktop with the RDP protocal. I chose to run Windows environment via Docker containers. Here’s how you can set it up:</p>
+<h3>Step 1: Install Docker on Linux Mint 21.3</h3>
+<ol>
+<li><p><strong>Follow the Docker Installation Guide</strong>: Linux Mint 21.3 is based on Ubuntu 22.04, so you’ll need to follow the Docker installation steps for Ubuntu Jammy Jellyfish. You can find the official guide <a href="https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository">here</a> (<a href="https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository">https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository</a>).</p>
+</li>
+<li><p><strong>Add Docker’s Official GPG Key and Repository</strong>:</p>
+<ul>
+<li>If you encounter errors related to the repository not found for “virginia” (Linux Mint’s code name), you may need to tweak the commands. This error occurs because Docker’s repository does not recognize the “virginia” code name directly. Try the following commands:</li>
+</ul>
+</li>
+</ol>
+<pre><code># Add Docker&#39;s official GPG key:
+sudo apt-get update
+sudo apt-get install ca-certificates curl
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+# Add the repository to Apt sources:
+echo \
+  &quot;deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(echo &quot;virginia&quot;) stable&quot; | \
+  sudo tee /etc/apt/sources.list.d/docker.list &gt; /dev/null
+sudo apt-get update
+</code></pre>
+<ol start="3">
+<li><strong>Configure Docker to Run as a Non-Root User</strong>:<ul>
+<li>Create the <code>docker</code> group: <code>sudo groupadd docker</code>.</li>
+<li>Add your user to the <code>docker</code> group: <code>sudo usermod -aG docker $USER</code>.</li>
+<li>Log out and log back in for the changes to take effect.</li>
+</ul>
+</li>
+</ol>
+<h3>Step 2: Install the Prerequisites</h3>
+<ol>
+<li><p><strong>Clone the WinApps Repository</strong>:</p>
+<ul>
+<li>Clone the repository from GitHub: <a href="https://github.com/winapps-org/winapps">WinApps GitHub Repo</a>.</li>
+</ul>
+</li>
+<li><p><strong>Install FreeRDP</strong>:</p>
+<ul>
+<li>Since FreeRDP 3 is not available in Linux Mint 21.3’s official repository, install it via Flatpak.</li>
+</ul>
+</li>
+</ol>
+<pre><code>flatpak install flathub com.freerdp.FreeRDP
+sudo flatpak override --filesystem=home com.freerdp.FreeRDP # To use `+home-drive`
+</code></pre>
+<h3>Step 3: Create a Windows Environment in Docker</h3>
+<ol>
+<li><p><strong>Configure Docker</strong>:</p>
+<ul>
+<li>Use the default configurations, credentials, disk space, RAM, etc., provided in the <code>compose.yaml</code> file from the <a href="https://github.com/dockur/windows">dockur/windows repo</a>.</li>
+</ul>
+</li>
+<li><p><strong>Start Your Windows Environment</strong>:</p>
+<ul>
+<li>Open your terminal, navigate to the WinApps repo, and run: <code>docker compose up</code>.</li>
+</ul>
+</li>
+</ol>
+<h3>Step 4: Install Microsoft Office Apps</h3>
+<ol>
+<li><p><strong>Access the Windows Environment</strong>:</p>
+<ul>
+<li>Remote into your Windows environment via <code>http://127.0.0.1:8006</code>.</li>
+</ul>
+</li>
+<li><p><strong>Install a Web Browser</strong>:</p>
+<ul>
+<li>Use PowerShell to install Google Chrome with the command: <code>winget install -e --id Google.Chrome</code>.</li>
+</ul>
+</li>
+<li><p><strong>Install Office 365</strong>:</p>
+<ul>
+<li>Download and install Office 365 as you would on a regular Windows machine.</li>
+</ul>
+</li>
+</ol>
+<h3>Step 5: Update Windows Credentials (Optional)</h3>
+<ol>
+<li><strong>Change the Default Password</strong>:<ul>
+<li>The default Windows environment credentials are <code>docker</code> with an empty password. Update this password for added security.</li>
+</ul>
+</li>
+</ol>
+<h3>Step 6: Use Microsoft Office Apps on Your Linux Desktop</h3>
+<ol>
+<li><strong>Create a WinApps Configuration File</strong>:<ul>
+<li>Create a configuration file at ~/.config/winapps/winapps.conf containing the following:</li>
+</ul>
+</li>
+</ol>
+<pre><code>RDP_USER=&quot;docker&quot;
+RDP_PASS=&quot;&quot;
+#RDP_DOMAIN=&quot;MYDOMAIN&quot;
+#RDP_IP=&quot;192.168.123.111&quot;
+#WAFLAVOR=&quot;docker&quot; # Acceptable values are &#39;docker&#39;, &#39;podman&#39; and &#39;libvirt&#39;.
+#RDP_SCALE=100 # Acceptable values are 100, 140, and 180.
+#RDP_FLAGS=&quot;&quot;
+#MULTIMON=&quot;true&quot;
+#DEBUG=&quot;true&quot;
+#FREERDP_COMMAND=&quot;xfreerdp&quot;
+</code></pre>
+<ol>
+<li><p><strong>Run the Install Script</strong>:</p>
+<ul>
+<li>Navigate to the WinApps repo and execute: <code>./installer</code>. Follow the prompts to add Office apps to your Linux desktop.</li>
+</ul>
+</li>
+<li><p><strong>Additional Applications</strong>:</p>
+<ul>
+<li>Only apps from the official supported list will appear. For running other applications, refer to the <a href="https://github.com/winapps-org/winapps?tab=readme-ov-file#running-applications-manually">WinApps readme</a> (<a href="https://github.com/winapps-org/winapps?tab=readme-ov-file#running-applications-manually">https://github.com/winapps-org/winapps?tab=readme-ov-file#running-applications-manually</a>).</li>
+</ul>
+</li>
+</ol>
+<h2>Conclusion</h2>
+<p>Setting up Microsoft Office on Linux Mint 21.3 might seem like a daunting task, but using WinApps and Docker makes it achievable. By following these steps, you can seamlessly integrate Microsoft Office into your Linux environment, allowing you to continue using familiar tools while exploring the benefits of Linux.</p>
+<p>Feel free to leave a comment if you have any questions or run into issues during the setup process. Happy computing!</p>
+<!--
+**SEO Keywords**: Microsoft Office on Linux, Linux Mint 21.3, Install Office on Linux, WinApps, Docker, Microsoft Office Excel Linux, PowerPoint on Linux, Word on Linux
+-->

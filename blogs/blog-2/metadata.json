@@ -1,5 +1,8 @@
 {
   "title": "Dummy blog",
+  "filename": "dummy-blog",
   "sort": 2,
-  "tags": []
+  "tags": [
+    "Linux"
+  ]
 }

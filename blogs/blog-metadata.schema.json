@@ -9,9 +9,13 @@
       "type": "string",
       "description": "Will be rendered on the HTML title element."
     },
+    "filename": {
+      "type": "string",
+      "description": "Output filename."
+    },
     "tags": {
       "type": "array",
-      "description": "Can only contain predefined tags and should not duplicate.",
+      "description": "Can only contain predefined tags and should not duplicate. Should not include file extension.",
       "items": {
         "$ref": "#/definitions/blogTags"
       }
@@ -23,6 +27,7 @@
   },
   "required": [
     "title",
+    "filename",
     "tags",
     "sort"
   ],
