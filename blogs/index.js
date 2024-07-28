@@ -4,7 +4,7 @@ const path = require('path');
 const { marked } = require('marked');
 const contentFilename = 'content.md';
 const metadataFilename = 'metadata.json';
-const publicDir = path.join(__dirname, `../public/blogs/`);
+const publicDir = path.join(__dirname, `../public/blog/`);
 
 async function startProcessAllAsync() {
   await cleanUpBlogsAsync();
@@ -15,12 +15,11 @@ async function startProcessAllAsync() {
 async function cleanUpBlogsAsync() {
   console.log(`Cleaning up public directory...`);
 
-  const publicBlogsDir = path.join(__dirname, '../public/blogs');
-  const items = await fsPromise.readdir(publicBlogsDir);
+  const items = await fsPromise.readdir(publicDir);
 
   for (let item of items) {
     if (item !== '.gitkeep') {
-      await fsPromise.unlink(path.join(publicBlogsDir, item));
+      await fsPromise.unlink(path.join(publicDir, item));
     }
   }
 }
@@ -65,15 +64,36 @@ async function generateBlogsJsonAsync() {
   console.log(`Generating blogs.json...`)
 
   const blogs = [];
+  const idOccurences = {}
 
   for (let blogDir of (await getBlogsDirectories())) {
-    const metadata = JSON.parse(await fsPromise.readFile(path.join(blogDir, metadataFilename), { encoding: 'utf8' }));
+    const metadataFile = path.join(blogDir, metadataFilename);
+    const metadata = JSON.parse(await fsPromise.readFile(metadataFile, { encoding: 'utf8' }));
+
+    if (!metadata.filename || typeof metadata.filename !== 'string') {
+      throw new Error(`filename is invalid in ${metadataFile}!`);
+    } else if (!metadata.sort || typeof metadata.sort !== 'number') {
+      throw new Error(`sort is invalid in ${metadataFile}!`);
+    } else if (!metadata.tags || typeof metadata.tags !== 'object' || !metadata.tags.length || typeof metadata.tags.length !== 'number') {
+      throw new Error(`tags is invalid in ${metadataFile}!`);
+    } else if (!metadata.title || typeof metadata.title !== 'string') {
+      throw new Error(`title is invalid in ${metadataFile}!`);
+    }
+
     blogs.push({
       tags: metadata.tags,
-      src: `/blogs/${metadata.filename}.html`,
+      src: `/blog/${metadata.filename}.html`,
       id: metadata.filename,
       sort: metadata.sort,
-    })
+      title: metadata.title,
+    });
+    idOccurences[metadata.filename] = (idOccurences[metadata.filename] || 0) + 1;
+  }
+
+  for (let filename in idOccurences) {
+    if (idOccurences[filename] > 1) {
+      throw new Error(`Duplicate filename '${filename}' found!`);
+    }
   }
 
   await fsPromise.writeFile(path.join(publicDir, `blogs.json`), JSON.stringify({ blogs: blogs.sort((a, b) => b.sort - a.sort) }));

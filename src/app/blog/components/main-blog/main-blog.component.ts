@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { BlogService } from '../../services/blog.service';
+import { map, Observable } from 'rxjs';
+import { Blog } from '../../models/blog';
 
 @Component({
   selector: 'app-main-blog',
@@ -6,5 +9,9 @@ import { Component } from '@angular/core';
   styleUrl: './main-blog.component.scss'
 })
 export class MainBlogComponent {
+  blogs$: Observable<Blog[]>;
 
+  constructor(private readonly blogService: BlogService) {
+    this.blogs$ = this.blogService.getBlogMetadata().pipe(map(({ blogs }) => blogs.sort((a, b) => b.sort - a.sort)));
+  }
 }
