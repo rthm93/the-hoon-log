@@ -5,6 +5,7 @@ import { Route, RouterModule } from '@angular/router';
 import { MainBlogComponent } from './components/main-blog/main-blog.component';
 import { SanitizeHtmlPipe } from '../shared/pipes/sanitize-html.pipe';
 import { BlogComponent } from './components/blog/blog.component';
+import { MainBlogHeaderComponent } from './components/main-blog-header/main-blog-header.component';
 
 const routes: Route[] = [
   {
@@ -25,6 +26,7 @@ const routes: Route[] = [
   declarations: [
     MainBlogComponent,
     BlogComponent,
+    MainBlogHeaderComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

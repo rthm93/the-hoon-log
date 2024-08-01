@@ -1,0 +1,53 @@
+@import "../../../../../node_modules/bootstrap/scss/functions";
+@import "../../../../../node_modules/bootstrap/scss/variables";
+
+.main-blog-header {
+  padding: 9rem;
+  background-image: url('../../../../../public/blog/home-bg.jpg');
+  background-size: cover;
+  background-position: center;
+
+  &__header{
+    text-align: center;
+    font-size: 5rem;
+    font-weight: $font-weight-bolder;
+    color: $white;
+  }
+}
+
+$lg-width: map-get($container-max-widths, lg);
+$md-width: map-get($container-max-widths, md);
+$sm-width: map-get($container-max-widths, sm);
+
+@media screen and (max-width: $lg-width) {
+  .main-blog-header {
+
+    &__header{
+      text-align: center;
+      font-size: 4rem;
+    }
+  }
+}
+
+@media screen and (max-width: $md-width) {
+  .main-blog-header {
+    padding: 2rem;
+
+    &__header{
+      text-align: center;
+      font-size: 3rem;
+    }
+  }
+}
+
+
+@media screen and (max-width: $sm-width) {
+  .main-blog-header {
+    padding: 2rem;
+
+    &__header{
+      text-align: center;
+      font-size: 2rem;
+    }
+  }
+}

@@ -1,25 +1,30 @@
-@if(blogs$ | async; as blogs) {
-<div>
-  @if(blogs && blogs.length) {
-  <div>
-    @for(blog of blogs; track blog.id) {
-    <div class="card">
-      <div class="card-body">
-        {{blog.title}}
+<app-main-blog-header></app-main-blog-header>
 
-        <div>
-          @for(tag of blog.tags; track tag) {
-          <span class="badge text-bg-primary">{{tag}}</span>
-          }
+<div class="container">
+
+  @if(blogs$ | async; as blogs) {
+  <div>
+    @if(blogs && blogs.length) {
+    <div>
+      @for(blog of blogs; track blog.id) {
+      <div class="card">
+        <div class="card-body">
+          {{blog.title}}
+
+          <div>
+            @for(tag of blog.tags; track tag) {
+            <span class="badge text-bg-primary">{{tag}}</span>
+            }
+          </div>
         </div>
       </div>
+      }
+    </div>
+    } @else {
+    <div>
+      No blogs found!
     </div>
     }
   </div>
-  } @else {
-  <div>
-    No blogs found!
-  </div>
   }
 </div>
-}
