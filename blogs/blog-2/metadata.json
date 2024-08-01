@@ -1,8 +1,8 @@
 {
   "title": "Dummy blog",
   "filename": "dummy-blog",
-  "sort": 2,
   "tags": [
     "Linux"
-  ]
+  ],
+  "publishedDate": "2024-08-02T13:57:19.195Z"
 }

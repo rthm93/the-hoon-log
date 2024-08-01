@@ -6,6 +6,7 @@ import { MainBlogComponent } from './components/main-blog/main-blog.component';
 import { SanitizeHtmlPipe } from '../shared/pipes/sanitize-html.pipe';
 import { BlogComponent } from './components/blog/blog.component';
 import { MainBlogHeaderComponent } from './components/main-blog-header/main-blog-header.component';
+import { MainBlogItemComponent } from './components/main-blog-item/main-blog-item.component';
 
 const routes: Route[] = [
   {
@@ -27,6 +28,7 @@ const routes: Route[] = [
     MainBlogComponent,
     BlogComponent,
     MainBlogHeaderComponent,
+    MainBlogItemComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

@@ -3,9 +3,10 @@
 
 .main-blog-header {
   padding: 9rem;
-  background-image: url('../../../../../public/blog/home-bg.jpg');
+  background-image: url('../../../../../public/assets/blog/home-bg.jpg');
   background-size: cover;
   background-position: center;
+  margin-bottom: 2rem;
 
   &__header{
     text-align: center;

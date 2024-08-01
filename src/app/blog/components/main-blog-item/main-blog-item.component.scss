@@ -1,0 +1,21 @@
+@import "../../../../../node_modules/bootstrap/scss/functions";
+@import "../../../../../node_modules/bootstrap/scss/variables";
+
+$separator-margin: 2.5rem;
+
+.main-blog-item {
+  &_title{
+    font-weight: $font-weight-bold;
+  }
+
+  &__badge-container {
+    &__badge {
+      margin-right: 0.25rem;
+    }
+  }
+
+  &__separator{
+    margin-top: $separator-margin;
+    margin-bottom: $separator-margin;
+  }
+}

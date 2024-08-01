@@ -2,6 +2,6 @@ export interface Blog {
   tags: string[];
   src: string;
   id: string;
-  sort: number;
+  timestamp: string | Date;
   title: string;
 }

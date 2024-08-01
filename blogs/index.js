@@ -72,20 +72,20 @@ async function generateBlogsJsonAsync() {
 
     if (!metadata.filename || typeof metadata.filename !== 'string') {
       throw new Error(`filename is invalid in ${metadataFile}!`);
-    } else if (!metadata.sort || typeof metadata.sort !== 'number') {
-      throw new Error(`sort is invalid in ${metadataFile}!`);
     } else if (!metadata.tags || typeof metadata.tags !== 'object' || !metadata.tags.length || typeof metadata.tags.length !== 'number') {
       throw new Error(`tags is invalid in ${metadataFile}!`);
     } else if (!metadata.title || typeof metadata.title !== 'string') {
       throw new Error(`title is invalid in ${metadataFile}!`);
+    } else if (!metadata.publishedDate || typeof metadata.title !== 'string' || isNaN(new Date(metadata.publishedDate))) {
+      throw new Error(`publishedDate is invalid in ${metadataFile}!`);
     }
 
     blogs.push({
       tags: metadata.tags,
       src: `/blog/${metadata.filename}.html`,
       id: metadata.filename,
-      sort: metadata.sort,
       title: metadata.title,
+      timestamp: metadata.publishedDate
     });
     idOccurences[metadata.filename] = (idOccurences[metadata.filename] || 0) + 1;
   }
@@ -96,7 +96,7 @@ async function generateBlogsJsonAsync() {
     }
   }
 
-  await fsPromise.writeFile(path.join(publicDir, `blogs.json`), JSON.stringify({ blogs: blogs.sort((a, b) => b.sort - a.sort) }));
+  await fsPromise.writeFile(path.join(publicDir, `blogs.json`), JSON.stringify({ blogs: blogs.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()) }));
 }
 
 async function getDirectoryEntriesAsync() {

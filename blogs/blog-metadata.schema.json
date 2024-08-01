@@ -20,16 +20,17 @@
         "$ref": "#/definitions/blogTags"
       }
     },
-    "sort": {
-      "type":"integer",
-      "description": "The bigger the number, the newer the post is."
+    "publishedDate": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Blog published timestamp."
     }
   },
   "required": [
     "title",
     "filename",
     "tags",
-    "sort"
+    "publishedDate"
   ],
   "additionalProperties": false,
   "definitions": {

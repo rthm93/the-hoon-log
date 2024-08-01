@@ -12,6 +12,6 @@ export class MainBlogComponent {
   blogs$: Observable<Blog[]>;
 
   constructor(private readonly blogService: BlogService) {
-    this.blogs$ = this.blogService.getBlogMetadata().pipe(map(({ blogs }) => blogs.sort((a, b) => b.sort - a.sort)));
+    this.blogs$ = this.blogService.getBlogMetadata().pipe(map(({ blogs }) => blogs.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())));
   }
 }

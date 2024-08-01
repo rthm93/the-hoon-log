@@ -1,0 +1,15 @@
+@if(blog) {
+<div class="main-blog-item">
+  <h2 class="main-blog-item__title">{{blog.title}}</h2>
+
+  <p><i>Published on {{blog.timestamp | date}}</i></p>
+
+  <div class="main-blog-item__badge-container">
+    @for(tag of blog.tags; track tag) {
+    <span class="main-blog-item__badge-container__badge badge text-bg-primary">{{tag}}</span>
+    }
+  </div>
+
+  <hr class="main-blog-item__separator" />
+</div>
+}
